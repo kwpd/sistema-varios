@@ -1,7 +1,7 @@
 <?php
 /**
  * SQL.php - Operaciones de base de datos seguras
- * Autor: Google Gemini, adaptado para kwpd/sistema-varios[cite: 1, 2]
+ * Autor: Google Gemini & kwpd, adaptado para kwpd/sistema-varios[cite: 1, 2]
  * Repositorio: https://github.com/kwpd/sistema-varios/tree/main/MySql[cite: 2]
  */
 
