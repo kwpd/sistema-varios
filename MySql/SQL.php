@@ -1,22 +1,31 @@
 Google Gemini, kwpd
 <?php
-// Se hizo una prueba con la version XAMPP v3.3.0
+/**
+ * SQL.php - Operaciones de base de datos seguras
+ * Autor: Google Gemini, adaptado para kwpd/sistema-varios[cite: 1, 2]
+ * Repositorio: https://github.com/kwpd/sistema-varios/tree/main/MySql[cite: 2]
+ */
+
 require_once __DIR__ . '/config.php';
 
-$dsn = "mysql:host={$host};port=3306;dbname={$dbname};charset=utf8mb4";
+class DatabaseQueries {
+    private $pdo;
 
-try {
-    $pdo = new PDO($dsn, $username, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ]);
-} catch (PDOException $e) {
-    die("Error en la conexión: " . $e->getMessage());
+    public function __construct($pdoConnection) {
+        $this->pdo = $pdoConnection;
+    }
+
+    public function obtenerRegistroPorId($id) {
+        try {
+            $stmt = $this->pdo->prepare("SELECT * FROM tu_tabla WHERE id = :id LIMIT 1");
+            $stmt->execute(['id' => $id]);
+            return $stmt->fetch();
+        } catch (PDOException $e) {
+            error_log("Error en consulta: " . $e->getMessage());
+            return false;
+        }
+    }
 }
 
-$sql = "SELECT ROW_NUMBER() OVER (ORDER BY skillpoints DESC) AS row_num, nick, skillpoints, pug_k, pug_a, pug_hsp, pug_bp,
-	pug_bd, pug_rws, pug_win, pug_los FROM basicpointsstats LIMIT 15";
-$stmt = $pdo->query($sql);
-$resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$db = new DatabaseQueries($pdo);
 ?>
