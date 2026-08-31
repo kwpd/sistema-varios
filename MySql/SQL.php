@@ -1,3 +1,4 @@
+Google Gemini, kwpd
 <?php
 // Se hizo una prueba con la version XAMPP v3.3.0
 require_once __DIR__ . '/config.php';
