@@ -1,4 +1,3 @@
-Google Gemini, kwpd
 <?php
 /**
  * config.php - Conexión centralizada a MySQL con doble IP (Failover)
