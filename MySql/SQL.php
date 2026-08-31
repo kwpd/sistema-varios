@@ -1,4 +1,3 @@
-Google Gemini, kwpd
 <?php
 /**
  * SQL.php - Operaciones de base de datos seguras
