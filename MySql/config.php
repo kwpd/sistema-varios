@@ -1,3 +1,4 @@
+Google Gemini, kwpd
 <?php
 $ips = ['192.168.1.100', '192.168.1.101']; //[cite: 1] 192.168.1.100 = Principal, 192.168.1.101 = Respaldo
 $dbName = 'tu_base_de_datos';
