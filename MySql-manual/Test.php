@@ -1,22 +1,57 @@
+<?php
+require_once 'Database.php';
 
-$host = 'localhost.com';
-$dbname = 'basedata';
-$username = 'name';
-$password = 'password';
-
-$dsn = "mysql:host={$host};port=3306;dbname={$dbname};charset=utf8mb4";
+// Capturar la selección manual enviada por GET o POST (por defecto conexion1)
+$conexionSeleccionada = $_REQUEST['conexion'] ?? 'conexion1';
 
 try {
-    $pdo = new PDO($dsn, $username, $password, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        PDO::ATTR_EMULATE_PREPARES => false,
-    ]);
-} catch (PDOException $e) {
-    die("Error en la conexión: " . $e->getMessage());
+    // Se obtiene la conexión seleccionada manualmente
+    $db = Database::getConnection($conexionSeleccionada);
+    $mensaje = "Conectado exitosamente a <b>" . htmlspecialchars($conexionSeleccionada) . "</b>";
+} catch (Exception $e) {
+    $mensaje = "Error: " . $e->getMessage();
 }
+?>
 
-$sql = "SELECT ROW_NUMBER() OVER (ORDER BY skillpoints DESC) AS row_num, nick, skillpoints, pug_k, pug_a, pug_hsp, pug_bp,
-	pug_bd, pug_rws, pug_win, pug_los FROM basicpointsstats LIMIT 15";
-$stmt = $pdo->query($sql);
-$resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Prueba de Conexión MySQL</title>
+</head>
+<body>
+
+    <h2>Seleccionar Conexión Manualmente</h2>
+
+    <!-- Formulario para cambiar de conexión manualmente -->
+    <form method="GET" action="Test.php">
+        <label for="conexion">Elige la conexión:</label>
+        <select name="conexion" id="conexion" onchange="this.form.submit()">
+            <option value="conexion1" <?= $conexionSeleccionada === 'conexion1' ? 'selected' : '' ?>>
+                Conexión 1 (Servidor 1)
+            </option>
+            <option value="conexion2" <?= $conexionSeleccionada === 'conexion2' ? 'selected' : '' ?>>
+                Conexión 2 (Servidor 2)
+            </option>
+        </select>
+        <button type="submit">Cambiar Conexión</button>
+    </form>
+
+    <hr>
+
+    <h3>Estado de la conexión:</h3>
+    <p><?= $mensaje ?></p>
+
+    <?php if (isset($db)): ?>
+        <?php
+            $stmt = $db->query("SELECT NOW() as fecha_hora, DATABASE() as bd");
+            $res = $stmt->fetch();
+        ?>
+        <ul>
+            <li><b>Base de datos:</b> <?= $res['bd'] ?></li>
+            <li><b>Fecha/Hora en el servidor:</b> <?= $res['fecha_hora'] ?></li>
+        </ul>
+    <?php endif; ?>
+
+</body>
+</html>
